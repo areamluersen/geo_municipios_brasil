@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import { Button } from 'antd';
 import './App.css';
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
         >
           Learn React
         </a>
+        <div className="App">
+          <Button type="primary">Button</Button>
+        </div>
       </header>
     </div>
   );
