@@ -1,12 +1,12 @@
 import './App.css';
-import map from './components/mapboxgl'
-import {useEffect} from 'react';
-import SinglePageStructure from './SinglePageStructure'
+import React, { useEffect } from 'react';
+import map from './components/mapboxgl';
+import SinglePageStructure from './SinglePageStructure';
 
 function App() {
   useEffect(() => {
-    map()
-  },[])
+    map();
+  }, []);
   return (
     <SinglePageStructure />
   );
