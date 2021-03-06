@@ -23,11 +23,22 @@
   justify-content: center;
 }
 
-.sidenav {
+.base-sidenav {
   grid-area: sidenav;
   background-color: #333842;
   justify-content: start;
 }
+
+.sidenav {
+  background-color: #49505f;
+  border-radius: 10px; 
+  margin: 0px 10px 30px; 
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.5); 
+  width: 95%;
+  height: 98%;
+}
+
+
 
 .main {
   grid-area: main;
