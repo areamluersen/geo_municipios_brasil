@@ -14,6 +14,10 @@ function initializeMap() {
           type: 'vector',
           url: 'mapbox://areamluersen.estados_br',
         },
+        municipios_br: {
+          type: 'vector',
+          url: 'mapbox://areamluersen.municipios_br',
+        },
       },
       layers: [
         {
@@ -24,6 +28,16 @@ function initializeMap() {
           paint: {
             'fill-color': 'rgba(66,100,251, 0.3)',
             'fill-outline-color': '#0000ff',
+          },
+        },
+        {
+          id: 'municipios',
+          source: 'municipios_br',
+          'source-layer': 'municipios_br',
+          type: 'fill',
+          paint: {
+            'fill-color': 'rgba(100,30,0, 0.3)',
+            'fill-outline-color': '#00ffff',
           },
         },
       ],
