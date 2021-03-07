@@ -29,14 +29,41 @@ function initializeMap() {
       ],
     },
   });
-  map.fitBounds([[
-    -77.6953125,
-    9.795677582829743,
-  ],
-  [
-    -36.123046875,
-    -33.43144133557529,
-  ]]);
+
+  map.on('load', () => {
+    map.fitBounds([[
+      -77.6953125,
+      9.795677582829743,
+    ],
+    [
+      -36.123046875,
+      -33.43144133557529,
+    ]]);
+    map.on('click', 'estados', (e) => {
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const { UF_05, NOME_UF } = e.features[0].properties;
+
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+
+      const a = `<strong>< UF: ${UF_05}-${NOME_UF}  > </strong>`;
+      new mapboxgl.Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(a)
+        .addTo(map);
+    });
+
+    // Change the cursor to a pointer when the mouse is over the places layer.
+    map.on('mouseenter', 'estados', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'estados', () => {
+      map.getCanvas().style.cursor = '';
+    });
+  });
 
   // map.on('load', () => {
   //   map.addSource('route', {
