@@ -108,14 +108,14 @@ function Funcionalidades() {
   }, []);
   return (
     <>
-      <Row gutter={[8, 8]}>
-        <Col span={24}>
-          <Button style={{ width: '100%' }} type="primary" onClick={handleIdentificarEstados}> Identificar Estados</Button>
+      <Row gutter={[8, 8]} justify="center">
+        <Col span={22}>
+          <Button style={{ width: '100%', marginTop: 10 }} type="primary" onClick={handleIdentificarEstados}> Identificar Estados</Button>
         </Col>
       </Row>
-      <Row gutter={[8, 8]}>
-        <Col span={24}>
-          <Button style={{ width: '100%' }} type="primary" onClick={handleIdentificarMunicipios}> Identificar Municípios</Button>
+      <Row gutter={[8, 8]} justify="center">
+        <Col span={22}>
+          <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={handleIdentificarMunicipios}> Identificar Municípios</Button>
         </Col>
       </Row>
 
