@@ -3,7 +3,7 @@ import '../../SinglePageStructure.css';
 import { setMapboxRef } from './MapRef';
 
 function initializeMap() {
-  mapboxgl.accessToken = 'pk.eyJ1IjoiYXJlYW1sdWVyc2VuIiwiYSI6ImNrbGlnd25zNjFraXEybm82Z2VpdTl6bGEifQ.zu6zJsM8BaE-3A6-v4skDw';
+  mapboxgl.accessToken = 'pk.eyJ1IjoidmlraW5nZGFyayIsImEiOiJja20ybHZ2encxOTRvMm9xbW5iNmFiMXR6In0.vYDn71tuvn1HDW7c4k8dkw';
   const map = new mapboxgl.Map({
     container: 'here-is-the-map',
     style: 'mapbox://styles/mapbox/streets-v11',
@@ -13,17 +13,18 @@ function initializeMap() {
 
   map.on('load', () => {
     map.addSource('estados_br', {
-      type: 'vector',
-      url: 'mapbox://areamluersen.estados_br',
+      type: 'geojson',
+      data: 'https://raw.githubusercontent.com/areamluersen/personal_geojson_brasil/master/uf.json',
+      generateId: true,
     });
     map.addSource('municipios_br', {
-      type: 'vector',
-      url: 'mapbox://areamluersen.municipios_br',
+      type: 'geojson',
+      data: 'https://raw.githubusercontent.com/areamluersen/personal_geojson_brasil/master/municipio.json',
+      generateId: true,
     });
     map.addLayer({
       id: 'estados',
       source: 'estados_br',
-      'source-layer': 'estados_br',
       type: 'fill',
       paint: {
         'fill-opacity': [
@@ -43,7 +44,6 @@ function initializeMap() {
     map.addLayer({
       id: 'municipios',
       source: 'municipios_br',
-      'source-layer': 'municipios_br',
       type: 'fill',
       paint: {
         'fill-outline-color': '#00ffff',
@@ -64,7 +64,6 @@ function initializeMap() {
     map.addLayer({
       id: 'estados_line',
       source: 'estados_br',
-      'source-layer': 'estados_br',
       type: 'line',
       paint: {
         'line-color': '#0000ff',

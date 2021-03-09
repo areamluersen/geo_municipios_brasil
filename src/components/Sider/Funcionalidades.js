@@ -25,13 +25,13 @@ function Funcionalidades() {
       if (e.features.length > 0) {
         if (hoveredStateId) {
           map.setFeatureState(
-            { source: 'estados_br', sourceLayer: 'estados_br', id: hoveredStateId },
+            { source: 'estados_br', id: hoveredStateId },
             { hover: false },
           );
         }
         hoveredStateId = e.features[0].id;
         map.setFeatureState(
-          { source: 'estados_br', sourceLayer: 'estados_br', id: hoveredStateId },
+          { source: 'estados_br', id: hoveredStateId },
           { hover: true },
         );
       }
@@ -40,7 +40,7 @@ function Funcionalidades() {
     map.on('mouseleave', 'estados', () => {
       if (hoveredStateId) {
         map.setFeatureState(
-          { source: 'estados_br', sourceLayer: 'estados_br', id: hoveredStateId },
+          { source: 'estados_br', id: hoveredStateId },
           { hover: false },
         );
       }
@@ -77,13 +77,13 @@ function Funcionalidades() {
       if (e.features.length > 0) {
         if (hoveredStateId) {
           map.setFeatureState(
-            { source: 'municipios_br', sourceLayer: 'municipios_br', id: hoveredStateId },
+            { source: 'municipios_br', id: hoveredStateId },
             { hover: false },
           );
         }
         hoveredStateId = e.features[0].id;
         map.setFeatureState(
-          { source: 'municipios_br', sourceLayer: 'municipios_br', id: hoveredStateId },
+          { source: 'municipios_br', id: hoveredStateId },
           { hover: true },
         );
       }
@@ -92,7 +92,7 @@ function Funcionalidades() {
     map.on('mouseleave', 'municipios', () => {
       if (hoveredStateId) {
         map.setFeatureState(
-          { source: 'municipios_br', sourceLayer: 'municipios_br', id: hoveredStateId },
+          { source: 'municipios_br', id: hoveredStateId },
           { hover: false },
         );
       }
