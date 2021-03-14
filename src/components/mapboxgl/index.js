@@ -1,6 +1,8 @@
 import mapboxgl from 'mapbox-gl';
 import '../../SinglePageStructure.css';
 import { setMapboxRef } from './MapRef';
+import uf from '../../GeoJsonFiles/uf.json';
+import municipios from '../../GeoJsonFiles/municipio.json';
 
 function initializeMap() {
   mapboxgl.accessToken = 'pk.eyJ1IjoidmlraW5nZGFyayIsImEiOiJja20ybHZ2encxOTRvMm9xbW5iNmFiMXR6In0.vYDn71tuvn1HDW7c4k8dkw';
@@ -14,12 +16,14 @@ function initializeMap() {
   map.on('load', () => {
     map.addSource('estados_br', {
       type: 'geojson',
-      data: 'https://raw.githubusercontent.com/areamluersen/personal_geojson_brasil/master/uf.json',
+      data: uf,
+      // data: 'https://raw.githubusercontent.com/areamluersen/personal_geojson_brasil/master/uf.json',
       generateId: true,
     });
     map.addSource('municipios_br', {
       type: 'geojson',
-      data: 'https://raw.githubusercontent.com/areamluersen/personal_geojson_brasil/master/municipio.json',
+      // data: 'https://raw.githubusercontent.com/areamluersen/personal_geojson_brasil/master/municipio.json',
+      data: municipios,
       generateId: true,
     });
     map.addLayer({
