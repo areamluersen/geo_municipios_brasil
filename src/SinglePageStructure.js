@@ -6,7 +6,8 @@ export default function SinglePageStructure() {
   return (
     <div className="grid-container">
       <header className="header">
-        <span>Mapa da obesidade infantil no brasil - Base SISVAN</span>
+        {/* <span>Mapa da obesidade infantil no brasil - Base SISVAN</span> */}
+        <span>TCC2 - PERFIL DEMOGRÁFICO E SÓCIO ECONÔMICO DA OBESIDADE INFANTIL NO BRASIL</span>
       </header>
       <aside className="base-sidenav">
         <div className="sidenav">
