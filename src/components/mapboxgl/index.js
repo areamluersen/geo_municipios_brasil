@@ -2,7 +2,7 @@ import mapboxgl from 'mapbox-gl';
 import '../../SinglePageStructure.css';
 import { setMapboxRef } from './MapRef';
 import uf from '../../GeoJsonFiles/uf.json';
-import municipios from '../../GeoJsonFiles/municipio.json';
+import municipios from '../../GeoJsonFiles/municipios_antropometria.json';
 
 function initializeMap() {
   mapboxgl.accessToken = 'pk.eyJ1IjoidmlraW5nZGFyayIsImEiOiJja20ybHZ2encxOTRvMm9xbW5iNmFiMXR6In0.vYDn71tuvn1HDW7c4k8dkw';
@@ -60,8 +60,8 @@ function initializeMap() {
         ],
         'fill-color': [
           'case',
-          ['boolean', ['feature-state', 'hover'], false],
-          '#FFFF00',
+          ['>', ['get', 'ant_2015.["sobrepeso_f"]'], 90],
+          '#FF0000',
           '#627BC1',
         ],
       },

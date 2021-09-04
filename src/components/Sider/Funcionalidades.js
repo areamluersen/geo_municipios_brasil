@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Button, Row, Col } from 'antd';
 import mapboxgl from 'mapbox-gl';
 import { getMapboxRef } from '../mapboxgl/MapRef';
+import municipios from '../../GeoJsonFiles/municipios_antropometria.json';
 
 function Funcionalidades() {
   const handleIdentificarEstados = useCallback(() => {
@@ -106,6 +107,64 @@ function Funcionalidades() {
       map.getCanvas().style.cursor = '';
     });
   }, []);
+
+  const consoleMunicipios = useCallback(() => {
+    console.log(municipios);
+  }, []);
+
+  const fetchMunicipioAntropometria = useCallback((year = 2015) => {
+    const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
+    return fetch(myRequest)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        throw new Error('Ops! Houve um erro em nosso servidor.');
+      })
+      .then((response) => response).catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  // Função busca atualiza geojson original e baixa cópia com os dados antropométricos.
+  const iterarPelosMunicipiosGeoJsonEAgregarDados = useCallback(() => {
+    let municipiosCopy = municipios.features;
+    [2015, 2016, 2017, 2018, 2019, 2020].forEach(async (year) => {
+      const municipiosAntropometria = await fetchMunicipioAntropometria(year);
+      municipiosCopy = await municipiosCopy.map(
+        (mun) => {
+          const municipioAntropometria = municipiosAntropometria
+            .find((m) => m.municipio.municipio === mun.properties.GEOCODIGO);
+          return {
+            geometry: mun.geometry,
+            properties: { ...mun.properties, [`ant_${year}`]: municipioAntropometria.municipio },
+          };
+        },
+      );
+      if (municipiosCopy[0]?.properties?.ant_2015
+        && municipiosCopy[0]?.properties?.ant_2016
+        && municipiosCopy[0]?.properties?.ant_2017
+        && municipiosCopy[0]?.properties?.ant_2018
+        && municipiosCopy[0]?.properties?.ant_2019
+        && municipiosCopy[0]?.properties?.ant_2020) {
+        const jsonData = { ...municipios, features: municipiosCopy };
+        const jsonContent = JSON.stringify(jsonData);
+        const filename = 'municipios_antropometria.json';
+        const filetype = 'text/json;charset=utf-8';
+
+        const a = document.createElement('a');
+        const dataURI = `data:${filetype};base64,${window.btoa(jsonContent)}`;
+        a.href = dataURI;
+        a.download = filename;
+        const e = document.createEvent('MouseEvents');
+        e.initMouseEvent('click', true, false,
+          document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        a.dispatchEvent(e);
+        a.removeNode();
+      }
+    });
+  }, []);
+
   return (
     <>
       <Row gutter={[8, 8]} justify="center">
@@ -116,6 +175,24 @@ function Funcionalidades() {
       <Row gutter={[8, 8]} justify="center">
         <Col span={22}>
           <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={handleIdentificarMunicipios}> Identificar Municípios</Button>
+        </Col>
+      </Row>
+      <Row gutter={[8, 8]} justify="center">
+        <Col span={22}>
+          <Button
+            style={{ width: '100%', marginTop: 5 }}
+            type="primary"
+            onClick={iterarPelosMunicipiosGeoJsonEAgregarDados}
+          >
+            {' '}
+            Agregar Dados
+
+          </Button>
+        </Col>
+      </Row>
+      <Row gutter={[8, 8]} justify="center">
+        <Col span={22}>
+          <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={consoleMunicipios}>console municipios</Button>
         </Col>
       </Row>
 
