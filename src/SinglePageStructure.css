@@ -3,7 +3,7 @@
 /* Assign grid instructions to our parent grid container */
 .grid-container {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 350px 1fr;
   grid-template-rows: 50px 1fr;
   grid-template-areas:
     "header header"

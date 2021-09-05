@@ -6,9 +6,21 @@ import { getMapboxRef } from '../../../mapboxgl/MapRef';
 
 const { Panel } = StyledCollapse;
 
+const initialTotais = {
+  faixa1: 0,
+  faixa2: 0,
+  faixa3: 0,
+  faixa4: 0,
+  faixa5: 0,
+};
+
 function Tematico() {
   const [year, setYear] = useState(2015);
   const [loading, setLoading] = useState(false);
+  const [totais, setTotais] = useState(initialTotais);
+  console.log('🚀 ------------------------------------------------------------------------------');
+  console.log('🚀 ~ file: index.js ~ line 21 ~ Tematico ~ totais, setTotais', totais, setTotais);
+  console.log('🚀 ------------------------------------------------------------------------------');
 
   const fetchAntropometria = useCallback(() => {
     const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
@@ -63,6 +75,46 @@ function Tematico() {
     return color;
   }, []);
 
+  const countFaixasPercentuais = useCallback(async () => {
+    const antropometria = await getAntropometria();
+    const faixa1 = antropometria.filter((ant) => (ant.municipio.tx_registros_f_sobrepeso
+      + ant.municipio.tx_registros_m_sobrepeso
+      + ant.municipio.tx_registros_f_obesidade
+      + ant.municipio.tx_registros_m_obesidade) < 5).length;
+    const faixa2 = antropometria.filter((ant) => (ant.municipio.tx_registros_f_sobrepeso
+        + ant.municipio.tx_registros_m_sobrepeso
+        + ant.municipio.tx_registros_f_obesidade
+        + ant.municipio.tx_registros_m_obesidade) >= 5
+        && (ant.municipio.tx_registros_f_sobrepeso
+        + ant.municipio.tx_registros_m_sobrepeso
+        + ant.municipio.tx_registros_f_obesidade
+        + ant.municipio.tx_registros_m_obesidade) < 10).length;
+    const faixa3 = antropometria.filter((ant) => (ant.municipio.tx_registros_f_sobrepeso
+        + ant.municipio.tx_registros_m_sobrepeso
+        + ant.municipio.tx_registros_f_obesidade
+        + ant.municipio.tx_registros_m_obesidade) >= 10
+        && (ant.municipio.tx_registros_f_sobrepeso
+        + ant.municipio.tx_registros_m_sobrepeso
+        + ant.municipio.tx_registros_f_obesidade
+        + ant.municipio.tx_registros_m_obesidade) < 20).length;
+    const faixa4 = antropometria.filter((ant) => (ant.municipio.tx_registros_f_sobrepeso
+        + ant.municipio.tx_registros_m_sobrepeso
+        + ant.municipio.tx_registros_f_obesidade
+        + ant.municipio.tx_registros_m_obesidade) >= 20
+        && (ant.municipio.tx_registros_f_sobrepeso
+        + ant.municipio.tx_registros_m_sobrepeso
+        + ant.municipio.tx_registros_f_obesidade
+        + ant.municipio.tx_registros_m_obesidade) < 30).length;
+    const faixa5 = antropometria.filter((ant) => (ant.municipio.tx_registros_f_sobrepeso
+        + ant.municipio.tx_registros_m_sobrepeso
+        + ant.municipio.tx_registros_f_obesidade
+        + ant.municipio.tx_registros_m_obesidade) >= 30).length;
+
+    setTotais({
+      faixa1, faixa2, faixa3, faixa4, faixa5,
+    });
+  }, [getAntropometria]);
+
   const agregarDados = useCallback(async () => {
     const antropometria = await getAntropometria();
     let municipiosCopy = municipios.features;
@@ -85,8 +137,9 @@ function Tematico() {
         };
       },
     );
+    countFaixasPercentuais();
     return { ...municipios, features: municipiosCopy };
-  }, [getAntropometria, getColor, year]);
+  }, [countFaixasPercentuais, getAntropometria, getColor, year]);
 
   const updateEstiloMapa = useCallback(async () => {
     const map = getMapboxRef();
@@ -131,45 +184,57 @@ function Tematico() {
           <Radio.Button value={2019}>2019</Radio.Button>
           <Radio.Button value={2020}>2020</Radio.Button>
         </Radio.Group>
+
         <div>
+          <div style={{
+            backgroundColor: '#49505f', margin: '10px 0px 3px', padding: '0px 10px', color: '#FFFFFF', fontWeight: 'bold', borderRadius: '3px', display: 'flex', justifyContent: 'space-between',
+          }}
+          >
+            <span>Faixa de Filtro</span>
+            <span>Municipios</span>
+          </div>
+          <div style={{
+            backgroundColor: '#16a716', padding: '0px 10px', color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px', display: 'flex', justifyContent: 'space-between',
+          }}
+          >
+            <span>{'Valor<5'}</span>
+            <span>{`${totais.faixa1}`}</span>
+          </div>
+          <div style={{
+            backgroundColor: '#7FFF00', padding: '0px 10px', color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px', display: 'flex', justifyContent: 'space-between',
+          }}
+          >
+            <span>{'Valor>=5 e Valor<10'}</span>
+            <span>{`${totais.faixa2}`}</span>
+          </div>
+          <div style={{
+            backgroundColor: '#FFFF00', padding: '0px 10px', color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px', display: 'flex', justifyContent: 'space-between',
+          }}
+          >
+            <span>{'Valor>=10 e Valor<20'}</span>
+            <span>{`${totais.faixa3}`}</span>
+          </div>
+          <div style={{
+            backgroundColor: '#FFA500', padding: '0px 10px', color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px', display: 'flex', justifyContent: 'space-between',
+          }}
+          >
+            <span>{'Valor>=20 e Valor<30'}</span>
+            <span>{`${totais.faixa4}`}</span>
+          </div>
+          <div style={{
+            backgroundColor: '#FF0000', padding: '0px 10px', color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px', display: 'flex', justifyContent: 'space-between',
+          }}
+          >
+            <span>{'Valor>=30'}</span>
+            <span>{`${totais.faixa5}`}</span>
+          </div>
           <div>
-            <span style={{ fontWeight: 'bold', fontSize: 14 }}>
+            <span style={{ fontWeight: 'bold', fontSize: 12 }}>
               Valor = Sobrepeso+Obesidade (%)
             </span>
           </div>
-          <div>
-            <div style={{
-              backgroundColor: '#16a716', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
-            }}
-            >
-              <span>{'Valor<5'}</span>
-            </div>
-            <div style={{
-              backgroundColor: '#7FFF00', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
-            }}
-            >
-              {'Valor>=5 e Valor<10'}
-            </div>
-            <div style={{
-              backgroundColor: '#FFFF00', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
-            }}
-            >
-              <span>{'Valor>=10 e Valor<20'}</span>
-            </div>
-            <div style={{
-              backgroundColor: '#FFA500', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
-            }}
-            >
-              <span>{'Valor>=20 e Valor<30'}</span>
-            </div>
-            <div style={{
-              backgroundColor: '#FF0000', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
-            }}
-            >
-              <span>{'Valor>=30'}</span>
-            </div>
-          </div>
         </div>
+
         <Button
           size="small"
           type="primary"
