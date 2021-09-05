@@ -2,7 +2,7 @@ import mapboxgl from 'mapbox-gl';
 import '../../SinglePageStructure.css';
 import { setMapboxRef } from './MapRef';
 import uf from '../../GeoJsonFiles/uf.json';
-import municipios from '../../GeoJsonFiles/municipios_antropometria.json';
+import municipios from '../../GeoJsonFiles/municipio.json';
 
 function initializeMap() {
   mapboxgl.accessToken = 'pk.eyJ1IjoidmlraW5nZGFyayIsImEiOiJja20ybHZ2encxOTRvMm9xbW5iNmFiMXR6In0.vYDn71tuvn1HDW7c4k8dkw';

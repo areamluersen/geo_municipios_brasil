@@ -171,17 +171,17 @@ function Funcionalidades() {
     <>
       <Row gutter={[8, 16]} justify="center">
         <Col span={22}>
-          <Button style={{ width: '100%', marginTop: 10 }} type="primary" onClick={handleIdentificarEstados}> Identificar Estados</Button>
+          <Button style={{ width: '100%', marginTop: 10 }} type="primary" onClick={handleIdentificarEstados}> Identificar Estado</Button>
         </Col>
       </Row>
       <Row gutter={[8, 16]} justify="center">
         <Col span={22}>
-          <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={handleIdentificarMunicipios}> Identificar Municípios</Button>
+          <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={handleIdentificarMunicipios}> Identificar Município</Button>
         </Col>
       </Row>
       <Row gutter={[8, 16]} justify="center">
         <Col span={22}>
-          <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={consoleMunicipios}>console municipios</Button>
+          <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={consoleMunicipios}>Console municipios</Button>
         </Col>
       </Row>
 

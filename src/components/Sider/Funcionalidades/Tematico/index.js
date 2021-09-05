@@ -6,13 +6,7 @@ const { Panel } = StyledCollapse;
 
 function Tematico() {
   const [year, setYear] = useState(2015);
-  console.log('🚀 ---------------------------------------------------');
-  console.log('🚀 ~ file: index.js ~ line 9 ~ Tematico ~ year', year);
-  console.log('🚀 ---------------------------------------------------');
-
-  const callback = useCallback((key) => {
-    console.log('key: ', key);
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const fetchAntropometria = useCallback(() => {
     const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
@@ -24,6 +18,7 @@ function Tematico() {
         throw new Error('Ops! Houve um erro em nosso servidor.');
       })
       .then((response) => response).catch((error) => {
+        // eslint-disable-next-line no-console
         console.error(error);
       });
   }, [year]);
@@ -55,12 +50,14 @@ function Tematico() {
   }, []);
 
   const handleAplicar = useCallback(async () => {
+    setLoading(true);
     const antropometria = await getAntropometria();
     updateEstiloMapa(antropometria);
+    setLoading(false);
   }, [getAntropometria, updateEstiloMapa]);
 
   return (
-    <StyledCollapse onChange={callback} size="small">
+    <StyledCollapse size="small">
       <Panel header="Temático" key="1">
         <Radio.Group onChange={(e) => setYear(e.target.value)} value={year} size="small">
           <Radio.Button value={2015}>2015</Radio.Button>
@@ -115,6 +112,7 @@ function Tematico() {
             width: '100%', margin: '10px 0px', backgroundColor: '#4CAF50', borderColor: '#00FF00',
           }}
           onClick={handleAplicar}
+          loading={loading}
         >
           Aplicar
         </Button>
