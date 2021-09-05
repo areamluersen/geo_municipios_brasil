@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Radio, Button } from 'antd';
 import StyledCollapse from './StyledCollapse';
+import municipios from '../../../../GeoJsonFiles/municipio.json';
 
 const { Panel } = StyledCollapse;
 
@@ -45,16 +46,56 @@ function Tematico() {
   },
   [year, fetchAntropometria, cleanLocalStorage]);
 
-  const updateEstiloMapa = useCallback((antropometria) => {
-    console.log('updateEstiloMapa: ', antropometria);
+  const getColor = useCallback((valor) => {
+    let color = '#AAAAAA';
+    if (valor < 5) {
+      color = '#00FF00';
+    } else if (valor >= 5 && valor < 10) {
+      color = '#7FFF00';
+    } else if (valor >= 10 && valor < 20) {
+      color = '#FFFF00';
+    } else if (valor >= 20 && valor < 30) {
+      color = '#FFA500';
+    } else if (valor >= 30) {
+      color = '#FF0000';
+    }
+    return color;
   }, []);
+
+  const updateEstiloMapa = useCallback(async () => {
+    // 1- Merge municipios com antropometria em forma de cor.
+    // 2- Criar nova camada no mapa.
+    const antropometria = await getAntropometria();
+    let municipiosCopy = municipios.features;
+    municipiosCopy = await municipiosCopy.map(
+      (mun) => {
+        const municipioAntropometria = antropometria
+          .find((m) => m.municipio.municipio === mun.properties.GEOCODIGO);
+        const { municipio: ant } = municipioAntropometria;
+        const valorCompare = ant.tx_registros_f_sobrepeso
+        + ant.tx_registros_m_sobrepeso
+        + ant.tx_registros_f_obesidade
+        + ant.tx_registros_m_obesidade;
+        return {
+          geometry: mun.geometry,
+          properties: {
+            ...mun.properties,
+            [`ant_${year}`]: ant,
+            color: getColor(valorCompare),
+          },
+        };
+      },
+    );
+    console.log('🚀 --------------------------------------------------------------------------------');
+    console.log('🚀 ~ file: index.js ~ line 64 ~ updateEstiloMapa ~ municipiosCopy', municipiosCopy);
+    console.log('🚀 --------------------------------------------------------------------------------');
+  }, [getAntropometria, getColor, year]);
 
   const handleAplicar = useCallback(async () => {
     setLoading(true);
-    const antropometria = await getAntropometria();
-    updateEstiloMapa(antropometria);
+    updateEstiloMapa();
     setLoading(false);
-  }, [getAntropometria, updateEstiloMapa]);
+  }, [updateEstiloMapa]);
 
   return (
     <StyledCollapse size="small">
@@ -92,7 +133,7 @@ function Tematico() {
               <span>{'Valor>=10 e Valor<20'}</span>
             </div>
             <div style={{
-              backgroundColor: 'orange', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
+              backgroundColor: '#FFA500', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
             }}
             >
               <span>{'Valor>=20 e Valor<30'}</span>
