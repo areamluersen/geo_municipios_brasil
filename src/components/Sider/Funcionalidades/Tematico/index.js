@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { Radio, Button } from 'antd';
+import {
+  ClearOutlined,
+} from '@ant-design/icons';
 import StyledCollapse from './StyledCollapse';
 import municipios from '../../../../GeoJsonFiles/municipio.json';
 import { getMapboxRef } from '../../../mapboxgl/MapRef';
@@ -18,9 +21,6 @@ function Tematico() {
   const [year, setYear] = useState(2015);
   const [loading, setLoading] = useState(false);
   const [totais, setTotais] = useState(initialTotais);
-  console.log('🚀 ------------------------------------------------------------------------------');
-  console.log('🚀 ~ file: index.js ~ line 21 ~ Tematico ~ totais, setTotais', totais, setTotais);
-  console.log('🚀 ------------------------------------------------------------------------------');
 
   const fetchAntropometria = useCallback(() => {
     const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
@@ -173,6 +173,17 @@ function Tematico() {
     setLoading(false);
   }, [updateEstiloMapa]);
 
+  const handleLimpar = useCallback(async () => {
+    const map = getMapboxRef();
+    if (map.getLayer('municipios_tematico')) {
+      map.removeLayer('municipios_tematico');
+    }
+    if (map.getSource('tematico')) {
+      map.removeSource('tematico');
+    }
+    setTotais(initialTotais);
+  }, []);
+
   return (
     <StyledCollapse size="small">
       <Panel header="Temático" key="1">
@@ -235,17 +246,31 @@ function Tematico() {
           </div>
         </div>
 
-        <Button
-          size="small"
-          type="primary"
-          style={{
-            width: '100%', margin: '10px 0px', backgroundColor: '#4CAF50', borderColor: '#00FF00',
-          }}
-          onClick={handleAplicar}
-          loading={loading}
-        >
-          Aplicar
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button
+            size="small"
+            type="primary"
+            style={{
+              width: '65%', margin: '10px 0px', backgroundColor: '#4CAF50', borderColor: '#00FF00',
+            }}
+            onClick={handleAplicar}
+            loading={loading}
+          >
+            Aplicar
+          </Button>
+          <Button
+            size="small"
+            style={{
+              width: '30%', margin: '10px 0px',
+            }}
+            icon={<ClearOutlined />}
+            onClick={handleLimpar}
+            loading={loading}
+          >
+            Limpar
+          </Button>
+
+        </div>
       </Panel>
     </StyledCollapse>
   );
