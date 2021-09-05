@@ -6,27 +6,58 @@ const { Panel } = StyledCollapse;
 
 function Tematico() {
   const [year, setYear] = useState(2015);
-  console.log('🚀 ---------------------------------------------------------------------');
-  console.log('🚀 ~ file: index.js ~ line 8 ~ Tematico ~ year, setYear', year, setYear);
-  console.log('🚀 ---------------------------------------------------------------------');
+  console.log('🚀 ---------------------------------------------------');
+  console.log('🚀 ~ file: index.js ~ line 9 ~ Tematico ~ year', year);
+  console.log('🚀 ---------------------------------------------------');
 
   const callback = useCallback((key) => {
     console.log('key: ', key);
   }, []);
 
-  const getAntropometria = useCallback(() => {
-    console.log('getAntropometria: ', year);
-    return [{ pao: 'de batata' }];
-  }, []);
+  const fetchAntropometria = useCallback(() => {
+    const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
+    return fetch(myRequest)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        throw new Error('Ops! Houve um erro em nosso servidor.');
+      })
+      .then((response) => response).catch((error) => {
+        console.error(error);
+      });
+  }, [year]);
+
+  // Necessário pois salvar mais de um ano estava ultrapassando o limite do localstorage.
+  const cleanLocalStorage = useCallback(() => {
+    [2015, 2016, 2017, 2018, 2019, 2020].forEach((y) => {
+      if (y !== year) {
+        localStorage.removeItem(`antropometria-${y}`);
+      }
+    });
+  }, [year]);
+
+  const getAntropometria = useCallback(async () => {
+    let antropometria = localStorage.getItem(`antropometria-${year}`);
+    if (!antropometria) {
+      antropometria = await fetchAntropometria();
+      cleanLocalStorage();
+      localStorage.setItem(`antropometria-${year}`, JSON.stringify(antropometria));
+    } else {
+      antropometria = JSON.parse(antropometria);
+    }
+    return antropometria;
+  },
+  [year, fetchAntropometria, cleanLocalStorage]);
 
   const updateEstiloMapa = useCallback((antropometria) => {
     console.log('updateEstiloMapa: ', antropometria);
   }, []);
 
-  const handleAplicar = useCallback(() => {
-    const antropometria = getAntropometria();
+  const handleAplicar = useCallback(async () => {
+    const antropometria = await getAntropometria();
     updateEstiloMapa(antropometria);
-  }, []);
+  }, [getAntropometria, updateEstiloMapa]);
 
   return (
     <StyledCollapse onChange={callback} size="small">
