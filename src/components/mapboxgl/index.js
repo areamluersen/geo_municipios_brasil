@@ -60,8 +60,9 @@ function initializeMap() {
         ],
         'fill-color': [
           'case',
-          ['>', ['get', 'ant_2015.["sobrepeso_f"]'], 90],
-          '#FF0000',
+          // ['>', ['get', 'ant_2015.["sobrepeso_f"]'], 90],
+          ['boolean', ['feature-state', 'hover'], false],
+          '#FFFF00',
           '#627BC1',
         ],
       },
