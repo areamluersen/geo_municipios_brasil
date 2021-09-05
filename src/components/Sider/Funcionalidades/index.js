@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { Button, Row, Col } from 'antd';
 import mapboxgl from 'mapbox-gl';
 import { getMapboxRef } from '../../mapboxgl/MapRef';
-import municipios from '../../../GeoJsonFiles/municipios_antropometria.json';
 import Tematico from './Tematico';
 
 function Funcionalidades() {
@@ -109,10 +108,6 @@ function Funcionalidades() {
     });
   }, []);
 
-  const consoleMunicipios = useCallback(() => {
-    console.log(municipios);
-  }, []);
-
   /* const fetchMunicipioAntropometria = useCallback((year = 2015) => {
     const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
     return fetch(myRequest)
@@ -179,31 +174,12 @@ function Funcionalidades() {
           <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={handleIdentificarMunicipios}> Identificar Município</Button>
         </Col>
       </Row>
-      <Row gutter={[8, 16]} justify="center">
-        <Col span={22}>
-          <Button style={{ width: '100%', marginTop: 5 }} type="primary" onClick={consoleMunicipios}>Console municipios</Button>
-        </Col>
-      </Row>
 
       <Row gutter={[8, 16]} justify="center">
         <Col span={22} style={{ width: '100%', marginTop: 5 }}>
           <Tematico />
         </Col>
       </Row>
-      {/* <Row gutter={[8, 8]} justify="center">
-        <Col span={22}>
-          <Button
-            style={{ width: '100%', marginTop: 5 }}
-            type="primary"
-            onClick={iterarPelosMunicipiosGeoJsonEAgregarDados}
-          >
-            {' '}
-            Agregar Dados
-
-          </Button>
-        </Col>
-      </Row> */}
-
     </>
   );
 }

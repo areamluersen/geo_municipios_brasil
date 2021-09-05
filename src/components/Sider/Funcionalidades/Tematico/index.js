@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Radio, Button } from 'antd';
 import StyledCollapse from './StyledCollapse';
 import municipios from '../../../../GeoJsonFiles/municipio.json';
+import { getMapboxRef } from '../../../mapboxgl/MapRef';
 
 const { Panel } = StyledCollapse;
 
@@ -49,7 +50,7 @@ function Tematico() {
   const getColor = useCallback((valor) => {
     let color = '#AAAAAA';
     if (valor < 5) {
-      color = '#00FF00';
+      color = '#16a716';
     } else if (valor >= 5 && valor < 10) {
       color = '#7FFF00';
     } else if (valor >= 10 && valor < 20) {
@@ -62,9 +63,7 @@ function Tematico() {
     return color;
   }, []);
 
-  const updateEstiloMapa = useCallback(async () => {
-    // 1- Merge municipios com antropometria em forma de cor.
-    // 2- Criar nova camada no mapa.
+  const agregarDados = useCallback(async () => {
     const antropometria = await getAntropometria();
     let municipiosCopy = municipios.features;
     municipiosCopy = await municipiosCopy.map(
@@ -86,10 +85,34 @@ function Tematico() {
         };
       },
     );
-    console.log('🚀 --------------------------------------------------------------------------------');
-    console.log('🚀 ~ file: index.js ~ line 64 ~ updateEstiloMapa ~ municipiosCopy', municipiosCopy);
-    console.log('🚀 --------------------------------------------------------------------------------');
+    return { ...municipios, features: municipiosCopy };
   }, [getAntropometria, getColor, year]);
+
+  const updateEstiloMapa = useCallback(async () => {
+    const map = getMapboxRef();
+    const dataToShow = await agregarDados();
+    if (map.getLayer('municipios_tematico')) {
+      map.removeLayer('municipios_tematico');
+    }
+    if (map.getSource('tematico')) {
+      map.removeSource('tematico');
+    }
+    map.addSource('tematico', {
+      type: 'geojson',
+      data: dataToShow,
+      generateId: true,
+    });
+    map.addLayer({
+      id: 'municipios_tematico',
+      source: 'tematico',
+      type: 'fill',
+      minzoom: 3,
+      paint: {
+        'fill-outline-color': '#00ffff',
+        'fill-color': ['get', 'color'],
+      },
+    });
+  }, [agregarDados]);
 
   const handleAplicar = useCallback(async () => {
     setLoading(true);
@@ -105,17 +128,18 @@ function Tematico() {
           <Radio.Button value={2016}>2016</Radio.Button>
           <Radio.Button value={2017}>2017</Radio.Button>
           <Radio.Button value={2018}>2018</Radio.Button>
+          <Radio.Button value={2019}>2019</Radio.Button>
           <Radio.Button value={2020}>2020</Radio.Button>
         </Radio.Group>
         <div>
           <div>
-            <span style={{ fontWeight: 'bold', fontSize: 15 }}>
-              Valor = Sobrepeso + Obesidade
+            <span style={{ fontWeight: 'bold', fontSize: 14 }}>
+              Valor = Sobrepeso+Obesidade (%)
             </span>
           </div>
           <div>
             <div style={{
-              backgroundColor: '#00FF00', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
+              backgroundColor: '#16a716', paddingLeft: 5, color: '#3b3f46', fontWeight: 'bold', borderRadius: '10px',
             }}
             >
               <span>{'Valor<5'}</span>
