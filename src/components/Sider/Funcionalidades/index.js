@@ -1,10 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button, Row, Col } from 'antd';
 import mapboxgl from 'mapbox-gl';
 import { getMapboxRef } from '../../mapboxgl/MapRef';
 import Tematico from './Tematico';
+import Municipio from './Municipio';
 
 function Funcionalidades() {
+  const [visibleModalMunicipio, setVisibleModalMunicipio] = useState(false);
+  const [municipioIdentificado, setMunicipioIdentificado] = useState(undefined);
+
   const handleIdentificarEstados = useCallback(() => {
     let hoveredStateId = null;
     const map = getMapboxRef();
@@ -62,7 +66,7 @@ function Funcionalidades() {
     const map = getMapboxRef();
     map.on('click', 'municipios', (e) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
-      const { NOME, UF } = e.features[0].properties;
+      const { NOME, UF, GEOCODIGO: codigoIbge } = e.features[0].properties;
 
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
@@ -73,6 +77,8 @@ function Funcionalidades() {
         .setLngLat(e.lngLat)
         .setHTML(a)
         .addTo(map);
+      setMunicipioIdentificado(codigoIbge);
+      setVisibleModalMunicipio(true);
     });
     map.on('mousemove', 'municipios', (e) => {
       if (e.features.length > 0) {
@@ -180,6 +186,12 @@ function Funcionalidades() {
           <Tematico />
         </Col>
       </Row>
+      <Municipio
+        visible={visibleModalMunicipio}
+        setVisible={setVisibleModalMunicipio}
+        municipioIdentificado={municipioIdentificado}
+        setMunicipioIdentificado={setMunicipioIdentificado}
+      />
     </>
   );
 }
