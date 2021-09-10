@@ -22,7 +22,7 @@ border: 0px;
     padding-left: 0 !important;
 }
 .ant-collapse-content{
-    background-color: #767e90;
+    background-color: #282c34;
     color: white;
     border-top: 0px;
 }
