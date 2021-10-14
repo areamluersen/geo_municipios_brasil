@@ -23,7 +23,7 @@ function Tematico() {
   const [totais, setTotais] = useState(initialTotais);
 
   const fetchAntropometria = useCallback(() => {
-    const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
+    const myRequest = new Request(`http://34.139.130.180:5000/municipios/${year}`);
     return fetch(myRequest)
       .then((response) => {
         if (response.status === 200) {
