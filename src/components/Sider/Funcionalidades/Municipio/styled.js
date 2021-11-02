@@ -7,7 +7,7 @@ export const StyledDesc = styled(Descriptions)`
 }
 .ant-descriptions-title {
     margin-bottom: 0;
-    color: #e5f2ff;
+    color: #40a3ff;
 
 }
 .ant-descriptions-view {
@@ -16,6 +16,11 @@ export const StyledDesc = styled(Descriptions)`
 .ant-descriptions-item-content {
     font-weight: 500;
     color: #1890ff;
+}
+.ant-descriptions-item-label {
+    background-color: #494f54;
+    color: whitesmoke;
+    font-weight: 500;
 }
 `;
 
