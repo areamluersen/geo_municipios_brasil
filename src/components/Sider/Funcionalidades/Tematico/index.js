@@ -163,8 +163,9 @@ function Tematico() {
       paint: {
         'fill-outline-color': '#00ffff',
         'fill-color': ['get', 'color'],
+        'fill-opacity': 0.8,
       },
-    });
+    }, 'estados_line');
   }, [agregarDados]);
 
   const handleAplicar = useCallback(async () => {
