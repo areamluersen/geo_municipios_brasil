@@ -35,11 +35,11 @@ const Antropometria = ({ data }) => {
   const getDataTotalsWithPattern = () => {
     const resp = [2015, 2016, 2017, 2018, 2019, 2020].map((key) => (
       [
-        { condicao: 'Magreza', year: key, soma: data[key].tx_registros_f_magreza + data[key].tx_registros_m_magreza },
-        { condicao: 'Eutrofia', year: key, soma: data[key].tx_registros_f_eutrofia + data[key].tx_registros_m_eutrofia },
-        { condicao: 'Risco Sobrepeso', year: key, soma: data[key].tx_registros_f_risco_sobrepeso + data[key].tx_registros_m_risco_sobrepeso },
-        { condicao: 'Sobrepeso', year: key, soma: data[key].tx_registros_f_sobrepeso + data[key].tx_registros_m_sobrepeso },
-        { condicao: 'Obesidade', year: key, soma: data[key].tx_registros_f_obesidade + data[key].tx_registros_m_obesidade },
+        { condicao: 'Magreza', year: key, soma: Math.round((data[key].tx_registros_f_magreza + data[key].tx_registros_m_magreza) * 100) / 100 },
+        { condicao: 'Eutrofia', year: key, soma: Math.round((data[key].tx_registros_f_eutrofia + data[key].tx_registros_m_eutrofia) * 100) / 100 },
+        { condicao: 'Risco Sobrepeso', year: key, soma: Math.round((data[key].tx_registros_f_risco_sobrepeso + data[key].tx_registros_m_risco_sobrepeso) * 100) / 100 },
+        { condicao: 'Sobrepeso', year: key, soma: Math.round((data[key].tx_registros_f_sobrepeso + data[key].tx_registros_m_sobrepeso) * 100) / 100 },
+        { condicao: 'Obesidade', year: key, soma: Math.round((data[key].tx_registros_f_obesidade + data[key].tx_registros_m_obesidade) * 100) / 100 },
       ]
     ));
     return resp.flat(1);
