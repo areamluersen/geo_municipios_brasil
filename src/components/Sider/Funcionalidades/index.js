@@ -64,6 +64,10 @@ function Funcionalidades() {
   const handleIdentificarMunicipios = useCallback(() => {
     let hoveredStateId = null;
     const map = getMapboxRef();
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+    });
     map.on('click', 'municipios', (e) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
       const { NOME, UF, GEOCODIGO: codigoIbge } = e.features[0].properties;
@@ -93,6 +97,8 @@ function Funcionalidades() {
           { source: 'municipios_br', id: hoveredStateId },
           { hover: true },
         );
+        const { NOME, UF } = e.features[0].properties;
+        popup.setLngLat(e.lngLat).setHTML(`Município: ${NOME} - (${UF})`).addTo(map);
       }
     });
 
@@ -104,69 +110,14 @@ function Funcionalidades() {
         );
       }
       hoveredStateId = null;
+      map.getCanvas().style.cursor = '';
+      popup.remove();
     });
+
     map.on('mouseenter', 'municipios', () => {
       map.getCanvas().style.cursor = 'pointer';
     });
-
-    map.on('mouseleave', 'municipios', () => {
-      map.getCanvas().style.cursor = '';
-    });
   }, []);
-
-  /* const fetchMunicipioAntropometria = useCallback((year = 2015) => {
-    const myRequest = new Request(`http://localhost:5000/municipios/${year}`);
-    return fetch(myRequest)
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        }
-        throw new Error('Ops! Houve um erro em nosso servidor.');
-      })
-      .then((response) => response).catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  // Função busca atualiza geojson original e baixa cópia com os dados antropométricos.
-  const iterarPelosMunicipiosGeoJsonEAgregarDados = useCallback(() => {
-    let municipiosCopy = municipios.features;
-    [2015, 2016, 2017, 2018, 2019, 2020].forEach(async (year) => {
-      const municipiosAntropometria = await fetchMunicipioAntropometria(year);
-      municipiosCopy = await municipiosCopy.map(
-        (mun) => {
-          const municipioAntropometria = municipiosAntropometria
-            .find((m) => m.municipio.municipio === mun.properties.GEOCODIGO);
-          return {
-            geometry: mun.geometry,
-            properties: { ...mun.properties, [`ant_${year}`]: municipioAntropometria.municipio },
-          };
-        },
-      );
-      if (municipiosCopy[0]?.properties?.ant_2015
-        && municipiosCopy[0]?.properties?.ant_2016
-        && municipiosCopy[0]?.properties?.ant_2017
-        && municipiosCopy[0]?.properties?.ant_2018
-        && municipiosCopy[0]?.properties?.ant_2019
-        && municipiosCopy[0]?.properties?.ant_2020) {
-        const jsonData = { ...municipios, features: municipiosCopy };
-        const jsonContent = JSON.stringify(jsonData);
-        const filename = 'municipios_antropometria.json';
-        const filetype = 'text/json;charset=utf-8';
-
-        const a = document.createElement('a');
-        const dataURI = `data:${filetype};base64,${window.btoa(jsonContent)}`;
-        a.href = dataURI;
-        a.download = filename;
-        const e = document.createEvent('MouseEvents');
-        e.initMouseEvent('click', true, false,
-          document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        a.dispatchEvent(e);
-        a.removeNode();
-      }
-    });
-  }, []);
-  */
 
   return (
     <>
