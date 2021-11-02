@@ -49,7 +49,7 @@ function initializeMap() {
       id: 'municipios',
       source: 'municipios_br',
       type: 'fill',
-      minzoom: 5,
+      minzoom: 3,
       paint: {
         'fill-outline-color': '#00ffff',
         'fill-opacity': [
