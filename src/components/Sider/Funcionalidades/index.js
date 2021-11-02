@@ -12,19 +12,9 @@ function Funcionalidades() {
   const handleIdentificarEstados = useCallback(() => {
     let hoveredStateId = null;
     const map = getMapboxRef();
-    map.on('click', 'estados', (e) => {
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      const { UF_05, NOME_UF } = e.features[0].properties;
-
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      }
-
-      const a = `<strong>Estado: ${UF_05}-${NOME_UF}</strong>`;
-      new mapboxgl.Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(a)
-        .addTo(map);
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
     });
     map.on('mousemove', 'estados', (e) => {
       if (e.features.length > 0) {
@@ -39,6 +29,8 @@ function Funcionalidades() {
           { source: 'estados_br', id: hoveredStateId },
           { hover: true },
         );
+        const { UF_05, NOME_UF } = e.features[0].properties;
+        popup.setLngLat(e.lngLat).setHTML(`<strong>Estado: ${UF_05}-${NOME_UF}</strong>`).addTo(map);
       }
     });
 
@@ -50,14 +42,12 @@ function Funcionalidades() {
         );
       }
       hoveredStateId = null;
+      map.getCanvas().style.cursor = '';
+      popup.remove();
     });
 
     map.on('mouseenter', 'estados', () => {
       map.getCanvas().style.cursor = 'pointer';
-    });
-
-    map.on('mouseleave', 'estados', () => {
-      map.getCanvas().style.cursor = '';
     });
   }, []);
 
@@ -70,17 +60,12 @@ function Funcionalidades() {
     });
     map.on('click', 'municipios', (e) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
-      const { NOME, UF, GEOCODIGO: codigoIbge } = e.features[0].properties;
+      const { GEOCODIGO: codigoIbge } = e.features[0].properties;
 
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
 
-      const a = `<strong>Município: ${NOME}-${UF}</strong>`;
-      new mapboxgl.Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(a)
-        .addTo(map);
       setMunicipioIdentificado(codigoIbge);
       setVisibleModalMunicipio(true);
     });
@@ -98,7 +83,7 @@ function Funcionalidades() {
           { hover: true },
         );
         const { NOME, UF } = e.features[0].properties;
-        popup.setLngLat(e.lngLat).setHTML(`Município: ${NOME} - (${UF})`).addTo(map);
+        popup.setLngLat(e.lngLat).setHTML(`<strong>Município: ${NOME}-(${UF})</strong>`).addTo(map);
       }
     });
 
