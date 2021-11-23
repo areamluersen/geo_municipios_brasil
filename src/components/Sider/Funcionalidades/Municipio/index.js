@@ -20,7 +20,9 @@ function Municipio({
   const [loading, setLoading] = useState(false);
 
   const fetchMunicipio = useCallback(() => {
+    console.log('🚀 ~ file: index.js ~ line 24 ~ fetchMunicipio ~ process.env', process.env);
     const myRequest = new Request(`${process.env.REACT_APP_API}/municipio/${municipioIdentificado}`);
+    console.log('🚀 ~ file: index.js ~ line 24 ~ fetchMunicipio ~ myRequest', myRequest);
     return fetch(myRequest)
       .then((response) => {
         if (response.status === 200) {
