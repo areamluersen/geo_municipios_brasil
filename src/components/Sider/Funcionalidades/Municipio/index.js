@@ -20,7 +20,7 @@ function Municipio({
   const [loading, setLoading] = useState(false);
 
   const fetchMunicipio = useCallback(() => {
-    const myRequest = new Request(`http://34.139.130.180:5000/municipio/${municipioIdentificado}`);
+    const myRequest = new Request(`${process.env.REACT_APP_API}/municipio/${municipioIdentificado}`);
     return fetch(myRequest)
       .then((response) => {
         if (response.status === 200) {
