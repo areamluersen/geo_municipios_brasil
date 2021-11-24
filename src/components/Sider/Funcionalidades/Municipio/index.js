@@ -20,8 +20,9 @@ function Municipio({
   const [loading, setLoading] = useState(false);
 
   const fetchMunicipio = useCallback(() => {
-    console.log('🚀 ~ file: index.js ~ line 24 ~ fetchMunicipio ~ process.env', process.env);
-    const myRequest = new Request(`${process.env.REACT_APP_API}/municipio/${municipioIdentificado}`);
+    const urlToFetch = process.env.REACT_APP_API ? process.env.REACT_APP_API : 'http://34.139.93.33:5000';
+    console.log('🚀 ~ file: index.js ~ line 24 ~ fetchMunicipio ~ urlToFetch', urlToFetch);
+    const myRequest = new Request(`${urlToFetch}/municipio/${municipioIdentificado}`);
     console.log('🚀 ~ file: index.js ~ line 24 ~ fetchMunicipio ~ myRequest', myRequest);
     return fetch(myRequest)
       .then((response) => {
