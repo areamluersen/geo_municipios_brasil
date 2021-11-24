@@ -6,6 +6,7 @@ import {
 import StyledCollapse from './StyledCollapse';
 import municipios from '../../../../GeoJsonFiles/municipio.json';
 import { getMapboxRef } from '../../../mapboxgl/MapRef';
+import isJson from '../../../Utils/isJson';
 
 const { Panel } = StyledCollapse;
 
@@ -49,7 +50,7 @@ function Tematico() {
 
   const getAntropometria = useCallback(async () => {
     let antropometria = localStorage.getItem(`antropometria-${year}`);
-    if (!antropometria) {
+    if (!antropometria || !isJson(antropometria)) {
       antropometria = await fetchAntropometria();
       cleanLocalStorage();
       localStorage.setItem(`antropometria-${year}`, JSON.stringify(antropometria));
