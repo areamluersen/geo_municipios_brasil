@@ -67,6 +67,18 @@ function initializeMap() {
         ],
       },
     });
+    // map.addLayer({
+    //   id: 'municipios_3D',
+    //   source: 'municipios_br',
+    //   type: 'fill-extrusion',
+    //   minzoom: 3,
+    //   paint: {
+    //     'fill-extrusion-color': '#AA00FF',
+    //     'fill-extrusion-height': 10000,
+    //     'fill-extrusion-base': 0,
+    //     'fill-extrusion-opacity': 0.8,
+    //   },
+    // });
     map.addLayer({
       id: 'estados_line',
       source: 'estados_br',
